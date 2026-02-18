@@ -1,0 +1,14 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "description": "Create Own CLI Tool with Node.js. Tests are not yet implemented.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["cli", "nodejs", "tool", "command-line", "utility"],
+  "author": "Manuel Guzman",
+  "license": "ISC",
+  "type": "module"
+}
+
