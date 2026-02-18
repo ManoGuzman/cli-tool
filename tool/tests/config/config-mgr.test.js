@@ -50,21 +50,32 @@ test('getConfig should handle invalid config', () => {
   const originalExit = process.exit;
   let exitCalled = false;
   process.exit = (code) => {
-  // Cleanup
-  try {
-    unlinkSync(invalidConfigPath);
-  } catch (err) {
-    // Ignore errors during cleanup
-  }
+    exitCalled = true;
+    // Cleanup
+    try {
+      unlinkSync(invalidConfigPath);
+    } catch (err) {
+      // Ignore errors during cleanup
+    }
+    throw new Error(`process.exit called with code ${code}`);
   };
 
-  assert.throws(() => {
-    getConfig();
-  }, /process\.exit called with code 1/);
+  try {
+    assert.throws(() => {
+      getConfig();
+    }, /process\.exit called with code 1/);
+    assert.strictEqual(exitCalled, true);
+  } finally {
+    // Restore process.exit
+    process.exit = originalExit;
 
-  // Restore process.exit
-  process.exit = originalExit;
-  
-  // Cleanup
-  unlinkSync(invalidConfigPath);
+    // Cleanup if config file still exists
+    if (existsSync(invalidConfigPath)) {
+      try {
+        unlinkSync(invalidConfigPath);
+      } catch (err) {
+        // Ignore errors during cleanup
+      }
+    }
+  }
 });
