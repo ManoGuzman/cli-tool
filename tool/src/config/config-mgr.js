@@ -19,9 +19,9 @@ export default function getConfig() {
   let config = {};
 
   if (fs.existsSync(configPath)) {
-    // Use require for sync import of CommonJS/ESM config
-    // Node.js ESM can't require, so use dynamic import with sync fallback
-    // For test, use eval to load config synchronously
+    // Read the config file and use eval to obtain the config object synchronously
+    // This approach is primarily intended for tests and assumes a simple "export default" style config
+    // Note: this does not use require() or dynamic import(), and carries the usual risks of eval
     const code = fs.readFileSync(configPath, 'utf8');
     // eslint-disable-next-line no-eval
     config = eval(code.replace('export default', ''));
