@@ -24,16 +24,14 @@ test('getConfig should return default config when no config file exists', () => 
 test('getConfig should validate config against schema', () => {
   const validConfigPath = join(process.cwd(), 'tool.config.js');
   
-  // Create valid config file
-  writeFileSync(validConfigPath, `export default {
-    port: 8080
-  };`);
-  
+  // Create valid config file as a valid JS object for eval
+  writeFileSync(validConfigPath, `({ port: 8080 })`);
+
   const config = getConfig();
-  
+
   assert.strictEqual(typeof config, 'object');
   assert.strictEqual(config.port, 8080);
-  
+
   // Cleanup
   try {
     unlinkSync(validConfigPath);

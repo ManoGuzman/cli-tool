@@ -4,7 +4,6 @@ import arg from 'arg';
 import chalk from 'chalk';
 import getConfig from '../src/config/config-mgr.js';
 import start from '../src/commands/start.js';
-import build from '../src/commands/build.js';
 
 const logger = createLogger('index');
 
@@ -25,10 +24,10 @@ try {
     start(config);
   }
 
-  if (args['--build']) {
-    const config = getConfig();
-    build(config);
-  }
+  // if (args['--build']) {
+  //   const config = getConfig();
+  //   build(config);
+  // }
 } catch (e) {
   logger.error(e);
   console.log(chalk.redBright('Error:'), e.message);
