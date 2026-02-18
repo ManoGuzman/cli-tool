@@ -15,15 +15,18 @@ test('logger should output messages correctly', () => {
     logger.warning('warning message');
     logger.highlight('highlight message');
     logger.debug('debug message');
-
-    // Assert that console.log was called with expected messages
-    assert.ok(logCalls.some(call => call.includes('test message')), 'log should output test message');
-    assert.ok(logCalls.some(call => call.includes('warning message')), 'warning should output warning message');
-    assert.ok(logCalls.some(call => call.includes('highlight message')), 'highlight should output highlight message');
-    assert.ok(logCalls.some(call => call.includes('debug message')), 'debug should output debug message');
   } finally {
     console.log = originalConsoleLog;
   }
+
+  // Flatten all arguments to a single array of strings for easier searching
+  const flatLogCalls = logCalls.flat().map(String);
+
+  // Assert that console.log was called with expected messages
+  assert.ok(flatLogCalls.some(msg => msg.includes('test message')), 'log should output test message');
+  assert.ok(flatLogCalls.some(msg => msg.includes('warning message')), 'warning should output warning message');
+  assert.ok(flatLogCalls.some(msg => msg.includes('highlight message')), 'highlight should output highlight message');
+  assert.ok(flatLogCalls.some(msg => msg.includes('debug message')), 'debug should output debug message');
 });
 
 test('createLogger should create logger with given name', () => {
