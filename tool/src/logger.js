@@ -5,6 +5,7 @@ export default function createLogger(name) {
     log: (...args) => console.log(chalk.gray(...args)),
     warning: (...args) => console.log(chalk.yellow(...args)),
     highlight: (...args) => console.log(chalk.bgCyanBright(...args)),
-    debug: (...args) => console.log(chalk.magenta(`[${name}]`, ...args))
+    debug: (...args) => console.log(chalk.magenta(`[${name}]`, ...args)),
+    error: (...args) => console.error(chalk.red(`[${name}]`, ...args))
   };
 }
