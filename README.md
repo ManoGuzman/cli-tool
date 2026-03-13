@@ -8,7 +8,6 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -193,7 +192,7 @@ pnpm build       # No-op (no build step required for pure JS)
 - [x] JSON Schema validation with human-friendly errors
 - [x] Chalk-based leveled logger
 - [x] Integration and unit tests (Node.js built-in test runner)
-- [x] GitHub Actions CI (lint → test → build on Node 20 & 22)
+- [x] GitHub Actions CI (lint → test → build on Node 22 & 24)
 - [ ] `--build` command implementation
 - [ ] Full `cosmiconfig`-style config loading (multiple file formats)
 - [ ] `DEBUG` environment variable integration for debug output
