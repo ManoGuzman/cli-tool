@@ -1,5 +1,4 @@
 import createLogger from '../logger.js';
-import { cosmiconfigSync } from 'cosmiconfig';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
@@ -11,19 +10,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const schema = JSON.parse(fs.readFileSync(join(__dirname, 'schema.json'), 'utf8'));
 const ajv = new Ajv();
-const configLoader = cosmiconfigSync('tool');
 const DEFAULT_CONFIG = { port: 1234 };
 
 export default function getConfig() {
   const configPath = resolve(process.cwd(), 'tool.config.js');
-  let config = {};
+  let config;
 
   if (fs.existsSync(configPath)) {
     // Read the config file and use eval to obtain the config object synchronously
     // This approach is primarily intended for tests and assumes a simple "export default" style config
     // Note: this does not use require() or dynamic import(), and carries the usual risks of eval
     const code = fs.readFileSync(configPath, 'utf8');
-    // eslint-disable-next-line no-eval
+    // eslint-disable-next-line no-eval -- required for synchronous ESM config loading
     config = eval(code.replace('export default', ''));
   } else {
     config = { ...DEFAULT_CONFIG };
