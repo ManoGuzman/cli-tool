@@ -1,28 +1,68 @@
-name: CI
+name: CLI Tool CI
 
 on:
   push:
-    branches: [master, feature-test]
+    branches: [master, feature-*]
   pull_request:
-    branches: [master, feature-test]
+    branches: [master]
 
 jobs:
-  test:
+  lint:
+    name: Lint (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: tool/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: ./tool
+
+      - name: Run lint
+        run: pnpm lint
+        working-directory: ./tool
+
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    needs: lint
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: tool/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install
@@ -30,4 +70,37 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+        working-directory: ./tool
+
+  build:
+    name: Build (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    needs: test
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: tool/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: ./tool
+
+      - name: Build
+        run: pnpm build
         working-directory: ./tool
