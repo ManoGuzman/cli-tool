@@ -33,8 +33,7 @@ export default function getConfig() {
     logger.warning('Invalid configuration was supplied');
     const validationErrors = betterAjvErrors(schema, config, ajv.errors ?? []);
     console.log(validationErrors);
-    // For testability, throw error instead of process.exit
-    throw new Error('process.exit called with code 1');
+    process.exit(1);
   }
 
   logger.debug('Loaded configuration', config);
